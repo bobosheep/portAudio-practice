@@ -8,12 +8,24 @@
 /* #define SAMPLE_RATE  (17932) // Test failure to open with this value. */
 #define SAMPLE_RATE  (44100)
 #define FRAMES_PER_BUFFER (512)
-#define NUM_SECONDS     (10)
+#define NUM_SECONDS     (5)
 #define NUM_CHANNELS    (2)
 /* #define DITHER_FLAG     (paDitherOff) */
 #define DITHER_FLAG     (0) /**/
 /** Set to 1 if you want to capture the recording to a file. */
 #define WRITE_TO_FILE   (0)
+
+/* Set volume */
+#define VOLUME_TIMES    8
+
+/*  Constant for pitch shifting     */
+#define M_PI 3.14159265358979323846
+#define MAX_FRAME_LENGTH 8192
+/*  parameter for pitch shifting    */
+#define PITCHSHIFT      1.5     /*Range from 0.5 to 2*/
+#define FFTFRAMESIZE    512    /*should be 1024 2048 4096*/
+#define OSAMP           32      /*should be integer*/
+
 
 /* Select sample format. */
 #if 1
@@ -37,12 +49,6 @@ typedef unsigned char SAMPLE;
 #define SAMPLE_SILENCE  (128)
 #define PRINTF_S_FORMAT "%d"
 #endif
-
-
-
-#define M_PI 3.14159265358979323846
-#define MAX_FRAME_LENGTH 8192
-
 
 void smbFft(float *fftBuffer, long fftFrameSize, long sign);
 double smbAtan2(double x, double y);
@@ -442,7 +448,7 @@ int main(void)
     double              average;
     char                option;
 
-    printf("myRecord.c\n"); fflush(stdout);
+    printf("Start myRecord...\nPlease press any key except 'q' to start to record.\n"); fflush(stdout);
     while(scanf("%c", &option) == 1 && option != 'q')
     {
         data.maxFrameIndex = totalFrames = NUM_SECONDS * SAMPLE_RATE; /* Record for a few seconds. */
@@ -487,10 +493,11 @@ int main(void)
         if( err != paNoError ) goto done;
         printf("\n=== Now recording!! Please speak into the microphone. ===\n"); fflush(stdout);
 
+        i = 0;
         while( ( err = Pa_IsStreamActive( stream ) ) == 1 )
         {
+            printf("%d seconds\n", i++ ); fflush(stdout);
             Pa_Sleep(1000);
-            printf("index = %d\n", data.frameIndex ); fflush(stdout);
         }
         if( err < 0 ) goto done;
 
@@ -501,7 +508,7 @@ int main(void)
         max = 0;
         average = 0.0;
         tmp1 = data;
-        smbPitchShift(1.8, numSamples, 4096, 32, SAMPLE_RATE, data.recordedSamples, tmp1.recordedSamples );
+        smbPitchShift(PITCHSHIFT, numSamples, FFTFRAMESIZE, OSAMP, SAMPLE_RATE, data.recordedSamples, tmp1.recordedSamples );
         for( i=0; i<numSamples; i++ )
         {
             val = data.recordedSamples[i];
@@ -512,8 +519,8 @@ int main(void)
                 max = val;
             }
             average += val;
-            data.recordedSamples[i] *= 7;
-            tmp1.recordedSamples[i] *= 7;
+            data.recordedSamples[i] *= VOLUME_TIMES;
+            tmp1.recordedSamples[i] *= VOLUME_TIMES;
         }
 
         average = average / (double)numSamples;
