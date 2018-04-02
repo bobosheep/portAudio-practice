@@ -508,7 +508,7 @@ int main(void)
         max = 0;
         average = 0.0;
         tmp1 = data;
-        smbPitchShift(PITCHSHIFT, numSamples, FFTFRAMESIZE, OSAMP, SAMPLE_RATE, data.recordedSamples, tmp1.recordedSamples );
+        //smbPitchShift(PITCHSHIFT, numSamples, FFTFRAMESIZE, OSAMP, SAMPLE_RATE, data.recordedSamples, tmp1.recordedSamples );
         for( i=0; i<numSamples; i++ )
         {
             val = data.recordedSamples[i];

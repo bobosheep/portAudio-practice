@@ -10,3 +10,5 @@ myRecord: myRecord.c
 	gcc myRecord.c libportaudio.a -lrt -lm -lasound -ljack -pthread -o myRecord
 myRecord2: myRecord2.c
 	gcc myRecord2.c libportaudio.a -lrt -lm -lasound -ljack -pthread -o myRecord2
+myStreamtest: myStreamtest.c
+	gcc myStreamtest.c libportaudio.a -lrt -lm -lasound -ljack -pthread -o myStreamtest

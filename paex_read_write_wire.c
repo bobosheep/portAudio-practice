@@ -114,6 +114,7 @@ int main(void)
     printf( "    Name: %s\n", inputInfo->name );
     printf( "      LL: %g s\n", inputInfo->defaultLowInputLatency );
     printf( "      HL: %g s\n", inputInfo->defaultHighInputLatency );
+    printf( "InputChannel: %g \n", inputInfo->maxInputChannels );
 
     outputParameters.device = Pa_GetDefaultOutputDevice(); /* default output device */
     printf( "Output device # %d.\n", outputParameters.device );
@@ -121,6 +122,7 @@ int main(void)
     printf( "   Name: %s\n", outputInfo->name );
     printf( "     LL: %g s\n", outputInfo->defaultLowOutputLatency );
     printf( "     HL: %g s\n", outputInfo->defaultHighOutputLatency );
+     printf( "OutputChannel: %d \n", outputInfo->maxOutputChannels );
 
     numChannels = inputInfo->maxInputChannels < outputInfo->maxOutputChannels
             ? inputInfo->maxInputChannels : outputInfo->maxOutputChannels;
