@@ -55,10 +55,10 @@
 #define WRITE_TO_FILE   (0)
 
 /* Set volume */
-#define VOLUME_TIMES    8
+#define VOLUME_TIMES    5
 
 /* Set how many silent buffer to finish a sentence */
-#define SILENT_TIMES    30 
+#define SILENT_TIMES    25 
 
 
 /* Select sample format. */
@@ -147,7 +147,7 @@ static int recordCallback( const void *inputBuffer, void *outputBuffer,
         }
         silentDetect /= (float) framesToCalc;
         //printf("%.6f\n", silentDetect);
-        if(silentDetect < 0.0006)
+        if(silentDetect < 0.001)
             data->silentTime++;
         else
             data->silentTime = 0;
@@ -287,7 +287,6 @@ int main(void)
         /* Measure maximum peak amplitude. */
         max = 0;
         average = 0.0;
-        //smbPitchShift(PITCHSHIFT, numSamples, FFTFRAMESIZE, OSAMP, SAMPLE_RATE, data.recordedSamples, tmp1.recordedSamples );
         for( i=0; i<numSamples; i++ )
         {
             val = data.recordedSamples[i];
